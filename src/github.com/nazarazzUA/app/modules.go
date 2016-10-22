@@ -6,6 +6,5 @@ type Module interface {
 
 	Config()
 	UseMiddleware(m *martini.ClassicMartini)
-	InitializeRoute(m *martini.ClassicMartini)
 	InitializeHandlers(m *martini.ClassicMartini)
 }

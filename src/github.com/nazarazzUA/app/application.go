@@ -2,6 +2,9 @@ package app
 
 import (
 	"github.com/go-martini/martini"
+	"github.com/jinzhu/gorm"
+	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
 type Application struct {
@@ -15,7 +18,6 @@ func (app *Application) runModules() {
 	for _,module := range app.modules {
 		module.Config()
 		module.UseMiddleware(app.m)
-		module.InitializeRoute(app.m)
 		module.InitializeHandlers(app.m)
 	}
 }
@@ -36,3 +38,11 @@ func (app *Application) Run () {
 	app.m.Run();
 }
 
+func GetDb () (*gorm.DB, error) {
+
+	db, err := gorm.Open("mysql", "root:root@/godutask?charset=utf8&parseTime=True&loc=Local")
+	if err != nil {
+		return nil, err
+	}
+	return db, nil;
+}
