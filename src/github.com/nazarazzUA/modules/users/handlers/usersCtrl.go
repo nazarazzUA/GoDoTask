@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 	"strings"
 	"golang.org/x/crypto/bcrypt"
@@ -17,15 +16,33 @@ func GetLoginPage(r render.Render) {
 
 func LoginProcess (r render.Render, s sessions.Session , req *http.Request) {
 
-	fmt.Println(s.Get("user_id"));
-
 	email := req.FormValue("email");
 	pass  := req.FormValue("password");
 
-	fmt.Println(email);
-	fmt.Println(pass);
+	if messages, ok  := isDataValid(email, pass); !ok {
+		r.HTML(403, "default/users/login", messages)
+		return
+	}
 
-	r.HTML(200, "default/users/login", nil)
+	db, err := app.GetDb()
+	defer db.Close();
+
+	if err != nil {
+		r.HTML(200, "default/errors/500", nil)
+		return
+	}
+
+	findsUser := &models.User{}
+	db.Where(&models.User{Email:email}).First(&findsUser)
+	err = bcrypt.CompareHashAndPassword([]byte(findsUser.Password), []byte(pass))
+
+	if err != nil {
+		r.HTML(403, "default/users/login", &models.ValidationErrorMessages{Email:"User Email or Password Incorect!"})
+		return
+	}
+
+	s.Set("user_id", findsUser.ID);
+	r.Redirect("/");
 }
 
 
@@ -34,8 +51,12 @@ func RegisterPage (r render.Render, s sessions.Session , req *http.Request) {
 	r.HTML(200, "default/users/registration", nil)
 }
 
+func LogoutUser(r render.Render, s sessions.Session) {
+	s.Set("user_id", nil);
+	r.Redirect("/login");
+}
 
-func RegisterProcess (r render.Render, s sessions.Session , req *http.Request) {
+func RegisterProcess (r render.Render, req *http.Request) {
 
 	email := req.FormValue("email");
 	pass  := req.FormValue("password");
@@ -45,23 +66,28 @@ func RegisterProcess (r render.Render, s sessions.Session , req *http.Request) {
 		return
 	}
 
-	password := []byte(pass)
-	hashedPassword, err := bcrypt.GenerateFromPassword(password, bcrypt.DefaultCost)
-
-	if err != nil {
-		r.HTML(200, "default/errors/500", nil)
-		return
-	}
+	hashedPassword := cryptPassword(pass)
 
 	db, err := app.GetDb()
+	defer db.Close();
 
 	if err != nil {
 		r.HTML(200, "default/errors/500", nil)
 		return
 	}
 
-	db.Create(&models.User{Email: email,Password: string(hashedPassword)});
+	user := &models.User{};
+	db.Where(&models.User{Email:email}).First(&user);
 
+	if user.Email == email {
+		r.HTML(403, "default/users/registration",
+			&models.ValidationErrorMessages{
+				Email:"With this email user exists!",
+			})
+		return
+	}
+
+	db.Create(&models.User{Email: email, Password: string(hashedPassword)});
 	r.Redirect("/login");
 }
 
@@ -85,7 +111,16 @@ func isDataValid(email string, password string) (*models.ValidationErrorMessages
 		return messages, false;
 	}
 
-
 	return messages, true;
+}
 
+func cryptPassword (pass string) ([]byte) {
+
+	password := []byte(pass)
+	hashedPassword, err := bcrypt.GenerateFromPassword(password, bcrypt.DefaultCost)
+	if err != nil {
+		panic(err);
+	}
+
+	return hashedPassword
 }

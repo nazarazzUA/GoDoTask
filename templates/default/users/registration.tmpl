@@ -13,13 +13,12 @@
                     <div class="input-field col s12">
                         <input id="email" type="email" name="email" class="validate">
                         <label for="email">Email</label>
-                        <div class="alert">
-                            {{if .Email}}
-                                <div class="card-panel red lighten-2">
-                                    <span class="white-text text-darken-2"> {{.Email}} </span>
-                                </div>
-                            {{end}}
-                        </div>
+
+                        {{if .Email}}
+                            <div class="card-panel red lighten-2">
+                                <span class="white-text text-darken-2"> {{.Email}} </span>
+                            </div>
+                        {{end}}
                     </div>
                 </div>
                 <div class="row">
