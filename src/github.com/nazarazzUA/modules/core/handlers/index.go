@@ -7,17 +7,19 @@ import (
 	"github.com/martini-contrib/render"
 	"path/filepath"
 	"mime"
-	"fmt"
 )
 
-const ADMIN_APP = "GoDoTaskAdminApp";
+const (
+	ADMIN_APP = "GoDoTaskAdminApp"
+	ADMIN_APP_PATH = "./admin_app/templates/index.html"
+);
+
 
 func GetIndexPage(w http.ResponseWriter, r * http.Request) {
-	body, err := ioutil.ReadFile("./admin_app/templates/index.html")
+	body, err := ioutil.ReadFile(ADMIN_APP_PATH)
 	if err != nil {
 		panic(err)
 	}
-
 	w.Header().Set("Content-Type","text/html")
 	w.Write(body);
 }
@@ -35,7 +37,7 @@ func ServeAdminStaticFiles(w http.ResponseWriter, r render.Render, params martin
 		r.Redirect("/404")
 	}
 
-	ext := filepath.Ext(fileName)
+	ext   := filepath.Ext(fileName)
 	mType := mime.TypeByExtension(ext)
 
 	w.Header().Set("Content-Type",mType);
@@ -43,7 +45,6 @@ func ServeAdminStaticFiles(w http.ResponseWriter, r render.Render, params martin
 }
 
 func NotFoundHandler (r render.Render, req * http.Request) {
-	fmt.Println();
 
 	r.HTML(404, "default/errors/404", nil);
 }
