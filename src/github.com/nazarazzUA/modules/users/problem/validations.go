@@ -1,5 +1,4 @@
-package models
-
+package problem
 
 type ValidationErrorMessages struct {
 	Email string;

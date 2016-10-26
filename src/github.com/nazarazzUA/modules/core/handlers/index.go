@@ -14,14 +14,17 @@ const (
 	ADMIN_APP_PATH = "./admin_app/templates/index.html"
 );
 
-
-func GetIndexPage(w http.ResponseWriter, r * http.Request) {
+func readAdminIndexFIle (w http.ResponseWriter, r * http.Request) {
 	body, err := ioutil.ReadFile(ADMIN_APP_PATH)
 	if err != nil {
 		panic(err)
 	}
 	w.Header().Set("Content-Type","text/html")
 	w.Write(body);
+}
+
+func GetIndexPage(w http.ResponseWriter, r * http.Request) {
+	readAdminIndexFIle(w,r);
 }
 
 func ServeAdminStaticFiles(w http.ResponseWriter, r render.Render, params martini.Params, req *http.Request) {
@@ -32,6 +35,7 @@ func ServeAdminStaticFiles(w http.ResponseWriter, r render.Render, params martin
 	if err != nil {
 		if req.Header.Get("X-Requested-With") == ADMIN_APP {
 			w.WriteHeader(404);
+			w.Write([]byte("{\"error\":\"Not found template\"}"))
 			return;
 		}
 		r.Redirect("/404")
@@ -44,7 +48,6 @@ func ServeAdminStaticFiles(w http.ResponseWriter, r render.Render, params martin
 	w.Write(body);
 }
 
-func NotFoundHandler (r render.Render, req * http.Request) {
-
-	r.HTML(404, "default/errors/404", nil);
+func NotFoundHandler (w http.ResponseWriter, r * http.Request) {
+	readAdminIndexFIle(w,r);
 }

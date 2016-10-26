@@ -7,6 +7,7 @@ import (
 	"github.com/martini-contrib/render"
 	"github.com/martini-contrib/sessions"
 	"github.com/nazarazzUA/app"
+	"github.com/nazarazzUA/modules/users/problem"
 	"github.com/nazarazzUA/modules/users/models"
 )
 
@@ -37,7 +38,7 @@ func LoginProcess (r render.Render, s sessions.Session , req *http.Request) {
 	err = bcrypt.CompareHashAndPassword([]byte(findsUser.Password), []byte(pass))
 
 	if err != nil {
-		r.HTML(403, "default/users/login", &models.ValidationErrorMessages{Email:"User Email or Password Incorect!"})
+		r.HTML(403, "default/users/login", &problem.ValidationErrorMessages{Email:"User Email or Password Incorect!"})
 		return
 	}
 
@@ -81,7 +82,7 @@ func RegisterProcess (r render.Render, req *http.Request) {
 
 	if user.Email == email {
 		r.HTML(403, "default/users/registration",
-			&models.ValidationErrorMessages{
+			&problem.ValidationErrorMessages{
 				Email:"With this email user exists!",
 			})
 		return
@@ -92,9 +93,9 @@ func RegisterProcess (r render.Render, req *http.Request) {
 }
 
 
-func isDataValid(email string, password string) (*models.ValidationErrorMessages, bool) {
+func isDataValid(email string, password string) (*problem.ValidationErrorMessages, bool) {
 
-	messages := &models.ValidationErrorMessages{};
+	messages := &problem.ValidationErrorMessages{};
 
 	if len(strings.TrimSpace(email)) == 0 {
 		messages.Email = "This field can`t bee empty!";
