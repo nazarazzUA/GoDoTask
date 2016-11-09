@@ -29,7 +29,7 @@ func GetIndexPage(w http.ResponseWriter, r * http.Request) {
 
 func ServeAdminStaticFiles(w http.ResponseWriter, r render.Render, params martini.Params, req *http.Request) {
 
-	fileName := params["_1"]
+	fileName  := params["_1"]
 	body, err := ioutil.ReadFile("./admin_app/" + fileName)
 
 	if err != nil {
