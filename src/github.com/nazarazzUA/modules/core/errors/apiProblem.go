@@ -1,5 +1,4 @@
-package problem
-
+package errors
 
 type ApiProblem struct {
 
