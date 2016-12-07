@@ -3,6 +3,7 @@ package commands
 import (
 	"fmt"
 	"github.com/nazarazzUA/cli"
+	"github.com/nazarazzUA/web"
 )
 
 type WebCommands struct {}
@@ -13,8 +14,8 @@ func (web * WebCommands) RegisterCommand(cli *cli.CliApplication) {
 	cli.AddHandler("web.stor-server", "stop golang dev server as port 8000", web.stopWebServer);
 }
 
-func (web * WebCommands) startServer() {
-	fmt.Println("Start web server");
+func (w * WebCommands) startServer() {
+	web.StartWebApp();
 }
 
 func (web * WebCommands) stopWebServer() {

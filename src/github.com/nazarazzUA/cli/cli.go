@@ -1,5 +1,6 @@
 package cli
 
+
 type CliApplication struct {
 	arguments []string
 	command map[string] *Command
@@ -19,6 +20,7 @@ func (app *CliApplication) AddHandler(name string, desc string, fn CommandHandle
 }
 
 func (app *CliApplication) ShowAllCommand() {
+
 	for _, command := range app.command {
 		command.info();
 	}
