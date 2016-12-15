@@ -13,6 +13,7 @@ func RegisterAllCommand(cli *cli.CliApplication) {
 	commands = []CommandsRegisterHandler{
 		&DataBaseCommands{},
 		&WebCommands{},
+		&FixtureCommand{},
 	}
 
 	for _, com := range commands {

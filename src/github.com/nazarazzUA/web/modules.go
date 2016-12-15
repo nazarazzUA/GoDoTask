@@ -1,12 +1,11 @@
 package web
 
 import (
-	"github.com/julienschmidt/httprouter"
+	"github.com/go-martini/martini"
 )
 
 type Module interface {
 
-	Config()
-	UseMiddleware(r *httprouter.Router)
-	InitializeHandlers(r *httprouter.Router)
+	Config(m *martini.ClassicMartini)
+	InitializeHandlers(m *martini.ClassicMartini)
 }

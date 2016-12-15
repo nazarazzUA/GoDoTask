@@ -1,6 +1,8 @@
 package cli
 
-import "fmt"
+import (
+    "github.com/fatih/color"
+)
 
 type CommandHandler func();
 
@@ -11,7 +13,7 @@ type Command struct {
 }
 
 func (com *Command) info () {
-	fmt.Printf("%-30s : %s \n",com.name, com.desc);
+	color.Cyan("%-30s : %s \n",com.name, com.desc);
 }
 
 func (com *Command) exec () {

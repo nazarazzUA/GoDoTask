@@ -10,8 +10,8 @@ type WebCommands struct {}
 
 func (web * WebCommands) RegisterCommand(cli *cli.CliApplication) {
 
-	cli.AddHandler("web.start-server", "start golang dev server as port 8000", web.startServer);
-	cli.AddHandler("web.stor-server", "stop golang dev server as port 8000", web.stopWebServer);
+	cli.AddHandler("web.start-server", "start golang dev server as port 8080", web.startServer);
+	cli.AddHandler("web.stop-server", "stop golang dev server as port 8080", web.stopWebServer);
 }
 
 func (w * WebCommands) startServer() {

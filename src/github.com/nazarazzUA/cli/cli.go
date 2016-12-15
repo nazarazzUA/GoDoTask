@@ -1,15 +1,20 @@
 package cli
 
+import (
+	"sort"
+)
+
+
 
 type CliApplication struct {
 	arguments []string
-	command map[string] *Command
+	command map[string] *Command;
 }
 
 func NewCliApp() *CliApplication {
 
 	app := &CliApplication{
-		command:make(map[string]*Command),
+		command: make(map[string] *Command),
 	};
 
 	return app;
@@ -21,8 +26,16 @@ func (app *CliApplication) AddHandler(name string, desc string, fn CommandHandle
 
 func (app *CliApplication) ShowAllCommand() {
 
-	for _, command := range app.command {
-		command.info();
+	var sortedKeys []string;
+
+	for key, _ := range app.command {
+		sortedKeys = append(sortedKeys, key);
+	}
+
+	sort.Strings(sortedKeys);
+
+	for _, commandName := range sortedKeys {
+		app.command[commandName].info();
 	}
 }
 

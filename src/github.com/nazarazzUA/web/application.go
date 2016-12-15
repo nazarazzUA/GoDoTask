@@ -1,26 +1,26 @@
 package web
 
 import (
-	"github.com/julienschmidt/httprouter"
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/nazarazzUA/modules/core"
 	"log"
 	"net/http"
 	"fmt"
+	"github.com/go-martini/martini"
+	"github.com/nazarazzUA/modules/user"
 )
 
 type WebApplication struct {
 
-	r *httprouter.Router
+	m *martini.ClassicMartini
 	modules []Module
 }
 
 func (app *WebApplication) runModules() {
 	for _,module := range app.modules {
-		module.Config()
-		module.UseMiddleware(app.r)
-		module.InitializeHandlers(app.r)
+		module.Config(app.m)
+	    module.InitializeHandlers(app.m)
 	}
 }
 
@@ -30,20 +30,21 @@ func (app *WebApplication) SetModule(m Module) {
 
 func CreateApp () (*WebApplication) {
 	return &WebApplication{
-		r : httprouter.New(),
+		m : martini.Classic(),
 	}
 }
 
 func (app *WebApplication) Run () {
 	app.runModules();
 	fmt.Println("Server start listen on port 8080");
-	log.Fatal(http.ListenAndServe(":8080", app.r));
+	log.Fatal(http.ListenAndServe(":8080", app.m));
 }
 
 func StartWebApp() {
 
 	app := CreateApp();
 	app.SetModule(&core.CoreModule{})
+	app.SetModule(&user.UserModule{})
 	app.Run();
 
 }

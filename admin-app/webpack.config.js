@@ -15,4 +15,5 @@ module.exports = {
             }
         ]
     },
+    source_map:"inline-source-map"
 };
