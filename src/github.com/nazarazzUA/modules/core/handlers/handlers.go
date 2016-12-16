@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"io/ioutil"
 	"github.com/go-martini/martini"
+	"fmt"
 )
 
 const (
@@ -14,26 +15,25 @@ const (
 	ADMIN_APP_PATH = "./admin-app/templates/index.html"
 );
 
-var adminAppFile, err = ioutil.ReadFile(ADMIN_APP_PATH);
+var adminAppFile []byte;
+
+func init () {
+	var err error;
+	adminAppFile, err = ioutil.ReadFile(ADMIN_APP_PATH);
+	if err != nil {
+		fmt.Println("Admin file not exist");
+	}
+}
 
 func readAdminIndexFIle (w http.ResponseWriter, r * http.Request) {
-	if err != nil {
-		panic(err)
-	}
 	w.Header().Set("Content-Type","text/html")
 	w.Write(adminAppFile);
 }
 
-
-func NotFound(r render.Render) {
-	r.HTML(404, "default/errors/404", nil);
-}
-
-
 func ServeAdminStaticFiles(w http.ResponseWriter, r render.Render, params martini.Params, req *http.Request) {
 
 	fileName := params["_1"]
-	body, err := ioutil.ReadFile("./admin_app/" + fileName)
+	body, err := ioutil.ReadFile("./admin-app/" + fileName)
 
 	if err != nil {
 		if req.Header.Get("X-Requested-With") == ADMIN_APP {

@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"github.com/martini-contrib/render"
 	//"fmt"
+	"github.com/fatih/color"
 )
 
 const (
@@ -17,7 +18,7 @@ func AuthUser (s sessions.Session , w http.ResponseWriter, r *http.Request, rend
 	if r.URL.String() == USER_LOGIN_PATH || r.URL.String() == USER_REGISTER_PATH {
 		return;
 	}
-
+	color.Yellow("User id is %s",s.Get("user_id"));
 	if s.Get("user_id") == nil {
 		render.Redirect("/login", 302)
 		return

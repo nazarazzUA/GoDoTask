@@ -9,15 +9,16 @@
                 <h5>User login</h5>
             </div>
             <form  action="/login" method="POST">
+                {{if .Message}}
+                <div class="card-panel red lighten-2">
+                    <span class="white-text text-darken-2"> {{.Message}} </span>
+                </div>
+                {{end}}
                 <div class="row">
                     <div class="input-field col s12">
                         <input id="email" type="email" name="email" class="validate" required>
                         <label for="email">Email</label>
-                        {{if .Email}}
-                        <div class="card-panel red lighten-2">
-                            <span class="white-text text-darken-2"> {{.Email}} </span>
-                        </div>
-                        {{end}}
+
                     </div>
                 </div>
                 <div class="row">

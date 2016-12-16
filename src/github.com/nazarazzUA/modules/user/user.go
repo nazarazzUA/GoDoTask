@@ -14,5 +14,6 @@ func (mod *UserModule) Config(m *martini.ClassicMartini) {
 func (mod *UserModule) InitializeHandlers(m *martini.ClassicMartini) {
 
 	m.Get("/login", handlers.LoginPage)
+	m.Post("/login",handlers.LoginProcess)
 
 }
