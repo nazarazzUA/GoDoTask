@@ -1,17 +1,20 @@
 package main
 
 import (
-
-	"github.com/nazarazzUA/cli"
-	"github.com/nazarazzUA/commands"
 	"os"
+	"github.com/nazarazzUA/modules/core"
+	"github.com/nazarazzUA/modules/user"
+	"github.com/nazarazzUA/app"
 )
 
 func main() {
 
-	cliApp := cli.NewCliApp();
-	commands.RegisterAllCommand(cliApp);
-	cliApp.ExecuteCommand(os.Args[1:]);
+	application := app.CreateApp();
+	application.SetModule(&core.CoreModule{})
+	application.SetModule(&user.UserModule{})
+	application.RunModules();
+
+	application.ExecuteCommand(os.Args[1:]);
 
 }
 

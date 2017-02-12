@@ -7,14 +7,20 @@ import (
 	"github.com/martini-contrib/sessions"
 	"github.com/nazarazzUA/modules/core/handlers"
 	"github.com/nazarazzUA/modules/core/middleware"
+	"github.com/nazarazzUA/app"
 )
 
 type CoreModule struct {
 	store sessions.CookieStore
+
 }
 
 
-func (mod *CoreModule) Config(m *martini.ClassicMartini) {
+func (mod *CoreModule) Config(application *app.WebApplication) {
+
+	application.CliApp.RegisterHandler(&DataBaseCommands{});
+	application.CliApp.RegisterHandler(&WebCommands{webApp:application});
+	application.CliApp.RegisterHandler(&FixtureCommand{});
 
 	mod.store = sessions.NewCookieStore([]byte("LKJAHFfjaadfaw"))
 	options := render.Renderer(render.Options{
@@ -23,14 +29,14 @@ func (mod *CoreModule) Config(m *martini.ClassicMartini) {
 		Extensions: []string{".tmpl", ".html"},
 	});
 
-	m.Use(martini.Static("assets", martini.StaticOptions{ Exclude: "/api/"}));
-	m.Use(options);
-	m.Use(sessions.Sessions("sess_id", mod.store))
-	m.Use(middleware.AuthUser);
+	application.Martini.Use(martini.Static("assets", martini.StaticOptions{ Exclude: "/api/"}));
+	application.Martini.Use(options);
+	application.Martini.Use(sessions.Sessions("sess_id", mod.store))
+	application.Martini.Use(middleware.AuthUser);
 
 	db := GetDb();
 
-	m.Map(db);
+	application.Martini.Map(db);
 
 }
 

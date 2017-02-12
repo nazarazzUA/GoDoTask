@@ -4,8 +4,6 @@ import (
 	"sort"
 )
 
-
-
 type CliApplication struct {
 	arguments []string
 	command map[string] *Command;
@@ -13,11 +11,11 @@ type CliApplication struct {
 
 func NewCliApp() *CliApplication {
 
-	app := &CliApplication{
+	appl := &CliApplication{
 		command: make(map[string] *Command),
 	};
 
-	return app;
+	return appl;
 }
 
 func (app *CliApplication) AddHandler(name string, desc string, fn CommandHandler) {
@@ -52,4 +50,12 @@ func (app *CliApplication) ExecuteCommand(inCommand []string) {
 	}
 
 	app.ShowAllCommand();
+}
+
+func (app *CliApplication) RegisterHandler (com CommandsRegisterHandler)  {
+	com.RegisterCommand(app);
+}
+
+func (app *CliApplication) RegisterWebHandler (com CommandsRegisterHandler)  {
+	com.RegisterCommand(app);
 }

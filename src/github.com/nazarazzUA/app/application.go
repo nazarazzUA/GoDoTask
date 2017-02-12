@@ -1,26 +1,26 @@
-package web
+package app
 
 import (
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
-	"github.com/nazarazzUA/modules/core"
 	"log"
 	"net/http"
 	"fmt"
 	"github.com/go-martini/martini"
-	"github.com/nazarazzUA/modules/user"
+	"github.com/nazarazzUA/app/cli"
 )
 
 type WebApplication struct {
 
-	m *martini.ClassicMartini
+	Martini *martini.ClassicMartini
+	CliApp *cli.CliApplication
 	modules []Module
 }
 
-func (app *WebApplication) runModules() {
+func (app *WebApplication) RunModules() {
 	for _,module := range app.modules {
-		module.Config(app.m)
-	    module.InitializeHandlers(app.m)
+		module.Config(app)
+	    module.InitializeHandlers(app.Martini)
 	}
 }
 
@@ -30,21 +30,17 @@ func (app *WebApplication) SetModule(m Module) {
 
 func CreateApp () (*WebApplication) {
 	return &WebApplication{
-		m : martini.Classic(),
+		Martini : martini.Classic(),
+		CliApp : cli.NewCliApp(),
 	}
 }
 
 func (app *WebApplication) Run () {
-	app.runModules();
 	fmt.Println("Server start listen on port 8080");
-	log.Fatal(http.ListenAndServe(":8080", app.m));
+	log.Fatal(http.ListenAndServe(":8080", app.Martini));
 }
 
-func StartWebApp() {
-
-	app := CreateApp();
-	app.SetModule(&core.CoreModule{})
-	app.SetModule(&user.UserModule{})
-	app.Run();
-
+func (app *WebApplication) ExecuteCommand(inCommand []string) {
+	app.CliApp.ExecuteCommand(inCommand);
 }
+

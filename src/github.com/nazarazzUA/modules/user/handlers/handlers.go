@@ -7,6 +7,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"github.com/nazarazzUA/modules/core"
 	"github.com/martini-contrib/sessions"
+	"fmt"
 )
 
 const EMPTY_STRING = "";
@@ -23,6 +24,7 @@ func LoginProcess(s sessions.Session, req * http.Request, r render.Render) {
 	user, errorMessage := loginProcess(email, pass);
 	if errorMessage != EMPTY_STRING {
 		data := struct { Message string }{errorMessage};
+		fmt.Print(data);
 		r.HTML(400,"default/users/login", data);
 		return;
 	}

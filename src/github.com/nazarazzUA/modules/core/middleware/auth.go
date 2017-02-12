@@ -8,6 +8,7 @@ import (
 	"github.com/fatih/color"
 )
 
+
 const (
 	USER_LOGIN_PATH = "/login"
 	USER_REGISTER_PATH = "/register"

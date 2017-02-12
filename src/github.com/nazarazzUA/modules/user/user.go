@@ -3,11 +3,12 @@ package user
 import (
 	"github.com/go-martini/martini"
 	"github.com/nazarazzUA/modules/user/handlers"
+	"github.com/nazarazzUA/app"
 )
 
 type UserModule struct { }
 
-func (mod *UserModule) Config(m *martini.ClassicMartini) {
+func (mod *UserModule) Config(application *app.WebApplication) {
 
 }
 

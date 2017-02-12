@@ -1,10 +1,9 @@
-package commands
+package core
 
 import (
-	"github.com/nazarazzUA/cli"
+	"github.com/nazarazzUA/app/cli"
 	"github.com/nazarazzUA/models"
 	"golang.org/x/crypto/bcrypt"
-	"github.com/nazarazzUA/modules/core"
 	"github.com/fatih/color"
 )
 
@@ -32,7 +31,7 @@ func (w * FixtureCommand) createTestUser() {
 		LastName: "Shchepilow",
 	}
 
-	db := core.GetDb();
+	db := GetDb();
 	db.Create(&user);
 
 	color.Green("User is created sucsesfull");

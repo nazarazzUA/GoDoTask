@@ -19,3 +19,7 @@ func (com *Command) info () {
 func (com *Command) exec () {
 	com.handler();
 }
+
+type CommandsRegisterHandler interface {
+	RegisterCommand(cl *CliApplication);
+}
